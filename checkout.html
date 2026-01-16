@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Оформление — ShopLite{% endblock %}
+{% block content %}
+<h1>Оформление заказа</h1>
+<div class="desktop-only layout-two">
+  <section class="card">
+    <h3>Доставка (демо)</h3>
+    <form method="post" action="{{ url_for('main.checkout_post') }}">
+      <label class="field">
+        <span>Адрес</span>
+        <input name="address" placeholder="г. ..., ул. ..., дом ..." required>
+      </label>
+      <label class="field">
+        <span>Телефон</span>
+        <input
+        name="phone"
+        type="tel"
+        inputmode="numeric"
+        autocomplete="tel"
+        placeholder="79000000000"
+        pattern="[0-9]{10,15}"
+        maxlength="15"
+        required
+        title="Введите 10–15 цифр. Буквы недопустимы."
+        oninput="this.value=this.value.replace(/\D/g,''); this.setCustomValidity('');"
+        oninvalid="this.setCustomValidity('Телефон введён неверно: допустимы только 10–15 цифр (без букв).')"
+      >
+      <small class="muted">Только цифры, 10–15 символов. Пример: 79000000000</small>
+      </label>
+      <button class="btn btn-primary w-full" type="submit">Подтвердить заказ</button>
+    </form>
+  </section>
+  <aside class="card">
+    <h3>Состав</h3>
+    <div class="stack">
+      {% for it in items %}
+        <div class="row between">
+          <div class="muted">{{ it.product.title }} × {{ it.qty }}</div>
+          <div class="price">{{ it.line }} ₽</div>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="divider"></div>
+    <div class="row between">
+      <div class="muted">Итого</div>
+      <div class="price">{{ total }} ₽</div>
+    </div>
+  </aside>
+</div>
+
+<div class="mobile-only">
+  <div class="card">
+    <h3>Доставка (демо)</h3>
+    <form method="post" action="{{ url_for('main.checkout_post') }}">
+      <label class="field">
+        <span>Адрес</span>
+        <input name="address" placeholder="Адрес доставки" required>
+      </label>
+      <label class="field">
+        <span>Телефон</span>
+        <input name="phone" placeholder="+7..." required>
+      </label>
+      <button class="btn btn-primary w-full" type="submit">Заказать</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <div class="row between">
+      <div class="muted">Итого</div>
+      <div class="price">{{ total }} ₽</div>
+    </div>
+  </div>
+</div>
+{% endblock %}

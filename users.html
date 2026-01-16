@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Пользователи — Админ{% endblock %}
+{% block content %}
+<div class="row between">
+  <h1>Пользователи</h1>
+  <a class="btn btn-ghost" href="{{ url_for('admin.dashboard') }}">← В админ-панель</a>
+</div>
+
+<div class="card" style="margin-bottom:16px;">
+  <form method="get" action="{{ url_for('admin.users') }}" class="row" style="gap:10px; flex-wrap:wrap;">
+    <input class="input" name="q" value="{{ q }}" placeholder="Поиск по логину..." style="min-width:240px;">
+    <select class="input" name="role" style="max-width:220px;">
+      <option value="" {{ 'selected' if not role else '' }}>Все роли</option>
+      <option value="user" {{ 'selected' if role=='user' else '' }}>Пользователь</option>
+      <option value="admin" {{ 'selected' if role=='admin' else '' }}>Администратор</option>
+    </select>
+    <button class="btn btn-primary" type="submit">Найти</button>
+    <a class="btn btn-ghost" href="{{ url_for('admin.users') }}">Сбросить</a>
+  </form>
+</div>
+
+<div class="card">
+  <div class="table users-table">
+    <div class="t-head">
+      <div>ID</div><div>Логин</div><div>Роль</div><div>Дата</div><div>Действия</div>
+    </div>
+
+    {% if users and users|length > 0 %}
+      {% for u in users %}
+        <div class="t-row">
+          <div class="cell-id">{{ u.id }}</div>
+          <div class="cell-login"><b>{{ u.username }}</b></div>
+          <div class="cell-role">{{ "Админ" if u.role=="admin" else "Пользователь" }}</div>
+          <div class="cell-date muted">{{ u.created_at.strftime("%d.%m.%Y %H:%M") if u.created_at else "" }}</div>
+
+          <div class="cell-actions user-actions">
+            <a class="btn btn-ghost" href="{{ url_for('admin.user_orders', uid=u.id) }}">Заказы</a>
+            <a class="btn btn-ghost" href="{{ url_for('admin.user_edit', uid=u.id) }}">Изм.</a>
+            <form method="post" action="{{ url_for('admin.user_delete', uid=u.id) }}"
+                  onsubmit="return confirm('Удалить пользователя {{ u.username }}?')">
+              <button class="btn btn-ghost" type="submit">Удалить</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="muted" style="padding:14px;">Пользователей не найдено.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

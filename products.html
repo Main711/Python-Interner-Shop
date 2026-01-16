@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Товары — Админ{% endblock %}
+{% block content %}
+<div class="row between">
+  <h1>Товары</h1>
+  <a class="btn btn-primary" href="{{ url_for('admin.product_new') }}">+ Добавить</a>
+</div>
+
+<div class="card">
+  <div class="table">
+    <div class="t-head">
+      <div>ID</div><div>Название</div><div>Категория</div><div>Цена</div><div>Активен</div><div></div>
+    </div>
+    {% for p in products %}
+      <div class="t-row">
+        <div>{{ p.id }}</div>
+        <div><a class="link" href="{{ url_for('main.product', pid=p.id) }}">{{ p.title }}</a></div>
+        <div class="muted">{{ p.category }}</div>
+        <div class="price">{{ p.price }} ₽</div>
+        <div>{{ "да" if p.is_active else "нет" }}</div>
+        <div class="row end">
+          <a class="btn btn-ghost" href="{{ url_for('admin.product_edit', pid=p.id) }}">Изм.</a>
+          <form method="post" action="{{ url_for('admin.product_delete', pid=p.id) }}" onsubmit="return confirm('Удалить товар?')">
+            <button class="btn btn-ghost" type="submit">Удалить</button>
+          </form>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

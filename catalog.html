@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Каталог — ShopLite{% endblock %}
+{% block content %}
+
+<div class="desktop-only layout-two">
+  <aside class="sidebar card">
+    <h3>Категории</h3>
+    <a class="chip {{ '' if category else 'chip-active' }}" href="{{ url_for('main.catalog', q=q) }}">Все</a>
+    {% for c in categories %}
+      <a class="chip {{ 'chip-active' if c==category else '' }}" href="{{ url_for('main.catalog', q=q, category=c) }}">{{ c }}</a>
+    {% endfor %}
+  </aside>
+
+  <section>
+    <div class="section-head">
+      <h1>Каталог</h1>
+      <div class="muted small">{{ products|length }} товаров</div>
+    </div>
+    <div class="grid">
+      {% if products %}
+
+      {% for p in products %}
+        <article class="card product-card">
+          <a href="{{ url_for('main.product', pid=p.id) }}">
+            <img class="product-img" src="{{ p.image_url or 'https://picsum.photos/seed/p' ~ p.id ~ '/800/600' }}" alt="">
+          </a>
+          <div class="product-body">
+            <div class="muted small">{{ p.category }}</div>
+            <h3 class="product-title">{{ p.title }}</h3>
+            <div class="row between">
+              <div class="price">{{ p.price }} ₽</div>
+              <form method="post" action="{{ url_for('main.cart_add', pid=p.id) }}">
+                <button class="btn btn-primary" type="submit">В корзину</button>
+              </form>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+
+      {% else %}
+
+      <div class="card" style="padding:16px;">
+
+        <b>Ничего не найдено.</b>
+
+        <div class="muted small" style="margin-top:6px;">Проверьте написание запроса или попробуйте выбрать другую категорию.</div>
+
+        <div style="margin-top:10px;">
+
+          <a class="btn btn-ghost" href="{{ url_for('main.catalog') }}">Сбросить поиск</a>
+
+        </div>
+
+      </div>
+
+      {% endif %}
+    </div>
+  </section>
+</div>
+
+{# Mobile version has другой порядок и структуру: фильтр-скролл сверху #}
+<div class="mobile-only">
+  <h1>Каталог</h1>
+  <div class="scroll-chips">
+    <a class="chip {{ '' if category else 'chip-active' }}" href="{{ url_for('main.catalog', q=q) }}">Все</a>
+    {% for c in categories %}
+      <a class="chip {{ 'chip-active' if c==category else '' }}" href="{{ url_for('main.catalog', q=q, category=c) }}">{{ c }}</a>
+    {% endfor %}
+  </div>
+
+  <div class="stack">
+    {% if products %}
+
+    {% for p in products %}
+      <article class="card product-row">
+        <a class="thumb" href="{{ url_for('main.product', pid=p.id) }}">
+          <img src="{{ p.image_url or 'https://picsum.photos/seed/p' ~ p.id ~ '/300/300' }}" alt="">
+        </a>
+        <div class="grow">
+          <div class="muted small">{{ p.category }}</div>
+          <div class="product-title">{{ p.title }}</div>
+          <div class="row between">
+            <div class="price">{{ p.price }} ₽</div>
+            <form method="post" action="{{ url_for('main.cart_add', pid=p.id) }}">
+              <button class="btn btn-primary" type="submit">+</button>
+            </form>
+          </div>
+        </div>
+      </article>
+    {% endfor %}
+
+    {% else %}
+
+    <div class="card" style="padding:16px;">
+
+      <b>Ничего не найдено.</b>
+
+      <div class="muted small" style="margin-top:6px;">Проверьте написание запроса или попробуйте выбрать другую категорию.</div>
+
+      <div style="margin-top:10px;">
+
+        <a class="btn btn-ghost" href="{{ url_for('main.catalog') }}">Сбросить поиск</a>
+
+      </div>
+
+    </div>
+
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

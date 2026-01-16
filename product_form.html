@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Товар — Админ{% endblock %}
+{% block content %}
+<h1>{{ "Новый товар" if not p else "Редактирование товара" }}</h1>
+
+<div class="narrow">
+  <div class="card">
+    <form method="post" action="{{ url_for('admin.product_new_post') if not p else url_for('admin.product_edit_post', pid=p.id) }}">
+      <label class="field">
+        <span>Название</span>
+        <input name="title" value="{{ p.title if p else '' }}" required>
+      </label>
+      <label class="field">
+        <span>Категория</span>
+        <input name="category" value="{{ p.category if p else '' }}">
+      </label>
+      <label class="field">
+        <span>Цена (₽)</span>
+        <input name="price" type="number" min="1" value="{{ p.price if p else 1 }}" required>
+      </label>
+      <label class="field">
+        <span>Ссылка на изображение (опционально)</span>
+        <input name="image_url" value="{{ p.image_url if p else '' }}">
+      </label>
+      <label class="field">
+        <span>Описание</span>
+        <textarea name="description" rows="5">{{ p.description if p else '' }}</textarea>
+      </label>
+
+      {% if p %}
+        <label class="check">
+          <input type="checkbox" name="is_active" {% if p.is_active %}checked{% endif %}>
+          <span>Активный</span>
+        </label>
+      {% endif %}
+
+      <button class="btn btn-primary w-full" type="submit">Сохранить</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

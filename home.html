@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Главная — ShopLite{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div>
+    <h1>Интернет‑магазин с современным UI</h1>
+    <p class="muted">Адаптивная верстка и разные структуры для мобильного и десктопа.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="{{ url_for('main.catalog') }}">Перейти в каталог</a>
+      <a class="btn btn-ghost" href="{{ url_for('main.about') }}">Узнать о проекте</a>
+    </div>
+  </div>
+
+  {% if not current_user() %}
+  {# ===== DESKTOP AUTH BLOCK (структура 1) ===== #}
+  <div class="card desktop-only auth-split">
+    <div>
+      <h3>Вход</h3>
+      <form method="post" action="{{ url_for('auth.login_post') }}">
+        <label class="field">
+          <span>Логин</span>
+          <input name="username" placeholder="например: user">
+        </label>
+        <label class="field">
+          <span>Пароль</span>
+          <input name="password" type="password" placeholder="например: user123">
+        </label>
+        <button class="btn btn-primary w-full" type="submit">Войти</button>
+      </form>
+    </div>
+    <div class="divider-vertical"></div>
+    <div>
+      <h3>Регистрация</h3>
+      <form method="post" action="{{ url_for('auth.register_post') }}">
+        <label class="field">
+          <span>Логин</span>
+          <input name="username" placeholder="минимум 3 символа">
+        </label>
+        <label class="field">
+          <span>Пароль</span>
+          <input name="password" type="password" placeholder="минимум 6 символов">
+        </label>
+        <button class="btn btn-ghost w-full" type="submit">Создать аккаунт</button>
+      </form>
+    </div>
+  </div>
+
+  {# ===== MOBILE AUTH BLOCK (структура 2) ===== #}
+  <div class="card mobile-only auth-tabs">
+    <div class="tabs">
+      <button class="tab active" data-tab="login">Вход</button>
+      <button class="tab" data-tab="register">Регистрация</button>
+    </div>
+
+    <div class="tab-panel" id="tab-login">
+      <form method="post" action="{{ url_for('auth.login_post') }}">
+        <label class="field">
+          <span>Логин</span>
+          <input name="username" placeholder="user">
+        </label>
+        <label class="field">
+          <span>Пароль</span>
+          <input name="password" type="password" placeholder="user123">
+        </label>
+        <button class="btn btn-primary w-full" type="submit">Войти</button>
+      </form>
+    </div>
+
+    <div class="tab-panel hidden" id="tab-register">
+      <form method="post" action="{{ url_for('auth.register_post') }}">
+        <label class="field">
+          <span>Логин</span>
+          <input name="username" placeholder="минимум 3 символа">
+        </label>
+        <label class="field">
+          <span>Пароль</span>
+          <input name="password" type="password" placeholder="минимум 6 символов">
+        </label>
+        <button class="btn btn-ghost w-full" type="submit">Создать</button>
+      </form>
+    </div>
+  </div>
+  {% else %}
+    <div class="card">
+      <h3>Вы вошли как: <span class="pill">{{ current_user().username }}</span></h3>
+      <p class="muted">Перейдите в личный кабинет или продолжайте покупки.</p>
+      <div class="row">
+        <a class="btn btn-primary" href="{{ url_for('main.account') }}">Личный кабинет</a>
+        <a class="btn btn-ghost" href="{{ url_for('main.catalog') }}">Каталог</a>
+      </div>
+    </div>
+  {% endif %}
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <h2>Витрина</h2>
+    <a class="link" href="{{ url_for('main.catalog') }}">Смотреть все →</a>
+  </div>
+  <div class="grid">
+    {% for p in products %}
+      <article class="card product-card">
+        <a href="{{ url_for('main.product', pid=p.id) }}">
+          <img class="product-img" src="{{ p.image_url or 'https://picsum.photos/seed/p' ~ p.id ~ '/800/600' }}" alt="">
+        </a>
+        <div class="product-body">
+          <div class="muted small">{{ p.category }}</div>
+          <h3 class="product-title">{{ p.title }}</h3>
+          <div class="row between">
+            <div class="price">{{ p.price }} ₽</div>
+            <form method="post" action="{{ url_for('main.cart_add', pid=p.id) }}">
+              <button class="btn btn-primary" type="submit">В корзину</button>
+            </form>
+          </div>
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

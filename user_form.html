@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Пользователь — Админ{% endblock %}
+{% block content %}
+<div class="row between">
+  <h1>Пользователь #{{ u.id }}</h1>
+  <a class="btn btn-ghost" href="{{ url_for('admin.users') }}">← К списку</a>
+</div>
+
+<div class="card">
+  <form method="post" action="{{ url_for('admin.user_edit_post', uid=u.id) }}" class="stack" style="gap:12px;">
+    <label class="field">
+      <span>Логин</span>
+      <input class="input" value="{{ u.username }}" disabled>
+    </label>
+
+    <label class="field">
+      <span>Роль</span>
+      <select class="input" name="role" required>
+        <option value="user" {{ 'selected' if u.role=='user' else '' }}>Пользователь</option>
+        <option value="admin" {{ 'selected' if u.role=='admin' else '' }}>Администратор</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span>Новый пароль (необязательно)</span>
+      <input class="input" name="password" type="password" placeholder="Оставьте пустым, чтобы не менять">
+      <small class="muted">Минимум 6 символов.</small>
+    </label>
+
+    <div class="row" style="gap:10px; flex-wrap:wrap;">
+      <button class="btn btn-primary" type="submit">Сохранить</button>
+      <a class="btn btn-ghost" href="{{ url_for('admin.user_orders', uid=u.id) }}">Посмотреть заказы</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

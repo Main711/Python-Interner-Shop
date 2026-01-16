@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}ShopLite{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <script defer src="{{ url_for('static', filename='js/app.js') }}"></script>
+</head>
+<body>
+  {# ===== DESKTOP HEADER (>=1200px) ===== #}
+  <header class="header desktop-only">
+    <div class="container header-row">
+      <a class="brand" href="{{ url_for('main.home') }}">ShopLite</a>
+
+      <form class="search" action="{{ url_for('main.catalog') }}" method="get">
+        <input name="q" placeholder="Поиск по каталогу..." value="{{ request.args.get('q','') }}">
+        <button class="btn btn-primary" type="submit">Найти</button>
+      </form>
+
+      <nav class="nav">
+        <a href="{{ url_for('main.catalog') }}">Каталог</a>
+        <a href="{{ url_for('main.about') }}">О нас</a>
+        <a href="{{ url_for('main.contacts') }}">Контакты</a>
+        <a class="cart-link" href="{{ url_for('main.cart') }}">Корзина <span class="badge">{{ cart_count() }}</span></a>
+        {% if current_user() %}
+          {% if current_user().role == 'admin' %}
+            <a href="{{ url_for('admin.dashboard') }}">Админ</a>
+          {% endif %}
+          <a href="{{ url_for('main.account') }}">Кабинет</a>
+          <form class="inline" action="{{ url_for('auth.logout') }}" method="post">
+            <button class="btn btn-ghost" type="submit">Выйти</button>
+          </form>
+        {% else %}
+          <a class="btn btn-ghost" href="{{ url_for('auth.login') }}">Вход</a>
+          <a class="btn btn-primary" href="{{ url_for('auth.register') }}">Регистрация</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  {# ===== MOBILE HEADER (<1200px) ===== #}
+  <header class="header mobile-only">
+    <div class="container header-row">
+      <a class="brand" href="{{ url_for('main.home') }}">ShopLite</a>
+      <button class="icon-btn" id="mobileMenuBtn" aria-label="Меню">☰</button>
+    </div>
+    <div class="container mobile-menu" id="mobileMenu">
+      <form class="search" action="{{ url_for('main.catalog') }}" method="get">
+        <input name="q" placeholder="Поиск..." value="{{ request.args.get('q','') }}">
+        <button class="btn btn-primary" type="submit">Найти</button>
+      </form>
+      <div class="mobile-links">
+        <a href="{{ url_for('main.catalog') }}">Каталог</a>
+        <a href="{{ url_for('main.about') }}">О нас</a>
+        <a href="{{ url_for('main.contacts') }}">Контакты</a>
+        {% if current_user() %}
+          {% if current_user().role == 'admin' %}
+            <a href="{{ url_for('admin.dashboard') }}">Админ</a>
+          {% endif %}
+          <a href="{{ url_for('main.account') }}">Кабинет</a>
+          <form action="{{ url_for('auth.logout') }}" method="post">
+            <button class="btn btn-ghost w-full" type="submit">Выйти</button>
+          </form>
+        {% else %}
+          <a class="btn btn-ghost w-full" href="{{ url_for('auth.login') }}">Вход</a>
+          <a class="btn btn-primary w-full" href="{{ url_for('auth.register') }}">Регистрация</a>
+        {% endif %}
+      </div>
+    </div>
+
+    {# Bottom nav is also mobile-only and has another structure #}
+    <nav class="bottom-nav">
+      <a href="{{ url_for('main.home') }}">🏠<span>Главная</span></a>
+      <a href="{{ url_for('main.catalog') }}">🛒<span>Каталог</span></a>
+      <a href="{{ url_for('main.cart') }}">🧺<span>Корзина</span><b class="dot">{{ cart_count() }}</b></a>
+      {% if current_user() %}
+        <a href="{{ url_for('main.account') }}">👤<span>Кабинет</span></a>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}">🔑<span>Вход</span></a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main class="container main">
+    {% include "components/_flash.html" %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-row">
+      <div>
+        <div class="brand muted">ShopLite</div>
+        <div class="muted">Учебный проект интернет‑магазина.</div>
+      </div>
+      <div class="footer-links">
+        <a href="{{ url_for('main.about') }}">О нас</a>
+        <a href="{{ url_for('main.contacts') }}">Контакты</a>
+        <a href="{{ url_for('main.catalog') }}">Каталог</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

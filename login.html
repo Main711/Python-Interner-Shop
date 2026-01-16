@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Вход — ShopLite{% endblock %}
+{% block content %}
+<div class="narrow">
+  <h1>Вход</h1>
+  <div class="card">
+    <form method="post" action="{{ url_for('auth.login_post') }}">
+      <label class="field">
+        <span>Логин</span>
+        <input name="username" required>
+      </label>
+      <label class="field">
+        <span>Пароль</span>
+        <input name="password" type="password" required>
+      </label>
+      <button class="btn btn-primary w-full" type="submit">Войти</button>
+    </form>
+    <div class="muted small">Нет аккаунта? <a class="link" href="{{ url_for('auth.register') }}">Зарегистрироваться</a></div>
+  </div>
+</div>
+{% endblock %}

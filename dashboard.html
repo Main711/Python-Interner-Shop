@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Админ — ShopLite{% endblock %}
+{% block content %}
+<h1>Админ‑панель</h1>
+
+<div class="stats">
+  <div class="card stat">
+    <div class="muted small">Пользователей</div>
+    <div class="big">{{ stats.users }}</div>
+  </div>
+  <div class="card stat">
+    <div class="muted small">Товаров</div>
+    <div class="big">{{ stats.products }}</div>
+  </div>
+  <div class="card stat">
+    <div class="muted small">Заказов</div>
+    <div class="big">{{ stats.orders }}</div>
+  </div>
+</div>
+
+<div class="desktop-only layout-two">
+  <aside class="card">
+    <h3>Действия</h3>
+    <a class="btn btn-primary w-full" href="{{ url_for('admin.users') }}">Пользователи</a>
+    <a class="btn btn-ghost w-full" href="{{ url_for('admin.products') }}">Товары</a>
+    <a class="btn btn-ghost w-full" href="{{ url_for('admin.orders') }}">Заказы</a>
+  </aside>
+  <section class="card">
+    <h3>Последние заказы</h3>
+    <div class="stack">
+      {% for o in latest_orders %}
+        <div class="row between line">
+          <div class="muted">№{{ o.id }} • {{ o.status }}</div>
+          <div class="price">{{ o.total }} ₽</div>
+        </div>
+      {% else %}
+        <div class="muted">Заказов нет.</div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+
+<div class="mobile-only">
+  <div class="card">
+    <a class="btn btn-primary w-full" href="{{ url_for('admin.products') }}">Управление товарами</a>
+    <a class="btn btn-ghost w-full" href="{{ url_for('admin.orders') }}">Просмотр заказов</a>
+  </div>
+
+  <div class="card">
+    <h3>Последние заказы</h3>
+    <div class="stack">
+      {% for o in latest_orders %}
+        <div class="card subtle">
+          <div class="row between">
+            <div><b>№{{ o.id }}</b></div>
+            <div class="price">{{ o.total }} ₽</div>
+          </div>
+          <div class="muted small">{{ o.status }}</div>
+        </div>
+      {% else %}
+        <div class="muted">Заказов нет.</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

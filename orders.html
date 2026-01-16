@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Заказы — Админ{% endblock %}
+{% block content %}
+<h1>Заказы</h1>
+
+<div class="card">
+  <div class="table">
+    <div class="t-head">
+      <div>ID</div><div>Пользователь</div><div>Статус</div><div>Сумма</div><div>Дата</div>
+    </div>
+    {% for o in orders %}
+      <div class="t-row">
+        <div>{{ o.id }}</div>
+        <div class="muted">{{ o.user.username }}</div>
+        <div>{{ o.status }}</div>
+        <div class="price">{{ o.total }} ₽</div>
+        <div class="muted small">{{ o.created_at.strftime("%d.%m.%Y %H:%M") }}</div>
+      </div>
+    {% else %}
+      <div class="t-row"><div class="muted">Пока заказов нет.</div></div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

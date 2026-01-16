@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Заказы пользователя — Админ{% endblock %}
+{% block content %}
+<div class="row between">
+  <h1>Заказы: {{ u.username }}</h1>
+  <a class="btn btn-ghost" href="{{ url_for('admin.users') }}">← К пользователям</a>
+</div>
+
+<div class="card">
+  <div class="table">
+    <div class="t-head">
+      <div>ID</div><div>Дата</div><div>Статус</div><div>Сумма</div>
+    </div>
+
+    {% if orders and orders|length > 0 %}
+      {% for o in orders %}
+        <div class="t-row">
+          <div><b>#{{ o.id }}</b></div>
+          <div class="muted">{{ o.created_at.strftime("%d.%m.%Y %H:%M") if o.created_at else "" }}</div>
+          <div>{{ o.status }}</div>
+          <div class="price">{{ o.total }} ₽</div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="muted" style="padding:14px;">У пользователя пока нет заказов.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

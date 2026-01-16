@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ p.title }} — ShopLite{% endblock %}
+{% block content %}
+<div class="product-page">
+  <div class="card">
+    <img class="product-hero" src="{{ p.image_url or 'https://picsum.photos/seed/p' ~ p.id ~ '/900/600' }}" alt="">
+  </div>
+  <div class="card">
+    <div class="muted small">{{ p.category }}</div>
+    <h1>{{ p.title }}</h1>
+    <div class="price big">{{ p.price }} ₽</div>
+    <p class="muted">{{ p.description }}</p>
+    <form method="post" action="{{ url_for('main.cart_add', pid=p.id) }}">
+      <button class="btn btn-primary w-full" type="submit">Добавить в корзину</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
